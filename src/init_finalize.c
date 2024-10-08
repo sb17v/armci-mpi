@@ -333,7 +333,7 @@ int PARMCI_Init_thread_comm(int armci_requested, MPI_Comm comm) {
 
 #ifdef OPEN_MPI
   if (ARMCII_GLOBAL_STATE.iov_method == ARMCII_IOV_DIRECT || ARMCII_GLOBAL_STATE.strided_method == ARMCII_STRIDED_DIRECT) {
-      ARMCII_Warning("MPI Datatypes are broken in RMA in many versions of Open-MPI!\n");
+      // ARMCII_Warning("MPI Datatypes are broken in RMA in many versions of Open-MPI!\n");
 #if defined(OMPI_MAJOR_VERSION) && (OMPI_MAJOR_VERSION == 4)
       ARMCII_Warning("Open-MPI 4.0.0 RMA with datatypes is definitely broken.  See https://github.com/open-mpi/ompi/issues/6275 for details.\n");
 #endif
@@ -383,7 +383,10 @@ int PARMCI_Init_thread_comm(int armci_requested, MPI_Comm comm) {
   ARMCII_GLOBAL_STATE.use_same_op=ARMCII_Getenv_bool("ARMCI_USE_SAME_OP", 0);
 
   /* Enable RMA element-wise atomicity (affects ARMCI Put/Get) */
-  ARMCII_GLOBAL_STATE.rma_atomicity=ARMCII_Getenv_bool("ARMCI_RMA_ATOMICITY", 1);
+  ARMCII_GLOBAL_STATE.put_rma_atomicity=ARMCII_Getenv_bool("ARMCI_PUT_RMA_ATOMICITY", 1);
+
+  /* Enable RMA element-wise atomicity (affects ARMCI Put/Get) */
+  ARMCII_GLOBAL_STATE.get_rma_atomicity=ARMCII_Getenv_bool("ARMCI_GET_RMA_ATOMICITY", 1);
 
   /* RMA ordering info key - this is the actual string we pass to MPI */
   ARMCII_Getenv_char(ARMCII_GLOBAL_STATE.rma_ordering, "ARMCI_RMA_ORDERING", "rar,raw,war,waw",
@@ -538,7 +541,8 @@ int PARMCI_Init_thread_comm(int armci_requested, MPI_Comm comm) {
       }
 
       /* MPI RMA semantics */
-      printf("  RMA_ATOMICITY          = %s\n", ARMCII_GLOBAL_STATE.rma_atomicity          ? "TRUE" : "FALSE");
+      printf("  PUT RMA_ATOMICITY          = %s\n", ARMCII_GLOBAL_STATE.put_rma_atomicity      ? "TRUE" : "FALSE");
+      printf("  GET RMA_ATOMICITY          = %s\n", ARMCII_GLOBAL_STATE.get_rma_atomicity      ? "TRUE" : "FALSE");
       printf("  NO_FLUSH_LOCAL         = %s\n", ARMCII_GLOBAL_STATE.end_to_end_flush       ? "TRUE" : "FALSE");
       printf("  RMA_NOCHECK            = %s\n", ARMCII_GLOBAL_STATE.rma_nocheck            ? "TRUE" : "FALSE");
       printf("  MSG_BARRIER_SYNCS      = %s\n", ARMCII_GLOBAL_STATE.msg_barrier_syncs      ? "TRUE" : "FALSE");

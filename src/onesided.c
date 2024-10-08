@@ -260,7 +260,7 @@ int PARMCI_Acc(int datatype, void *scale, void *src, void *dst, int bytes, int p
   /* TODO: Support a local accumulate operation more efficiently */
 
   gmr_accumulate(dst_mreg, src_buf, dst, count, type, proc);
-  gmr_flush(dst_mreg, proc, 1); /* flush_local */
+  gmr_flush(dst_mreg, proc, 0); /* flush_local */
 
   if (src_buf != src)
     MPI_Free_mem(src_buf);

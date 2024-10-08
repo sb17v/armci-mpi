@@ -111,6 +111,7 @@ void parmci_msg_barrier(void) {
 
   if (ARMCII_GLOBAL_STATE.msg_barrier_syncs) {
     ARMCII_Sync();
+    // MPI_Barrier(ARMCI_GROUP_WORLD.comm);
   }
 }
 

@@ -209,7 +209,7 @@ int ARMCII_Is_win_unified(MPI_Win win)
     int * attr_val = (int*)attr_ptr;
     if ( (*attr_val)==MPI_WIN_UNIFIED ) {
       return 1;
-    } else if ( (*attr_val)==MPI_WIN_UNIFIED ) {
+    } else if ( (*attr_val)==MPI_WIN_SEPARATE ) {
       return 0;
     } else {
       return -1;

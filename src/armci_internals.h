@@ -108,7 +108,8 @@ typedef struct {
   int           msg_barrier_syncs;      /* Call MPI_Win_sync in armci_msg_barrier                               */
   int           explicit_nb_progress;   /* Poke the MPI progress engine at the end of nonblocking (NB) calls    */
   int           use_alloc_shm;          /* Pass alloc_shm info to win_allocate / alloc_mem                      */
-  int           rma_atomicity;          /* Use Accumulate and Get_accumulate for Put and Get                    */
+  int           put_rma_atomicity;      /* Use Accumulate and Get_accumulate for Put and Get                    */
+  int           get_rma_atomicity;      /* TODO: Temporary var - remove it*/
   int           end_to_end_flush;       /* All flush_local calls become flush                                   */
   int           rma_nocheck;            /* Use MPI_MODE_NOCHECK on synchronization calls that take assertion    */
   int           disable_shm_accumulate; /* Set the disable_shm_accumulate window info key to true               */

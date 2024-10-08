@@ -201,6 +201,7 @@ int gmr_sync(gmr_t *mreg)
 
   if (!(mreg->unified)) {
       MPI_Win_sync(mreg->window);
+      MPI_Barrier(ARMCI_GROUP_WORLD.comm);
   }
 
   return 0;

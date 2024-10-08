@@ -251,7 +251,8 @@ gmr_t *gmr_create(gmr_size_t local_size, void **base_ptrs, ARMCI_Group *group) {
         if (print) printf("MPI_WIN_MODEL = MPI_WIN_UNIFIED\n");
     } else if (unified == 0) {
         mreg->unified = false;
-        if (print) printf("MPI_WIN_MODEL = MPI_WIN_SEPARATE\n");
+        // Disabling it for time being as it spits out too many time
+        // if (print) printf("MPI_WIN_MODEL = MPI_WIN_SEPARATE\n");
     } else {
         mreg->unified = false;
         if (print) printf("MPI_WIN_MODEL not available\n");
@@ -494,7 +495,7 @@ int gmr_put_typed(gmr_t *mreg, void *src, int src_count, MPI_Datatype src_type,
   ARMCII_Assert_msg(disp >= 0 && disp < mreg->slices[proc].size, "Invalid remote address");
   ARMCII_Assert_msg(disp + dst_count*extent <= mreg->slices[proc].size, "Transfer is out of range");
 
-  if (ARMCII_GLOBAL_STATE.rma_atomicity) {
+  if (ARMCII_GLOBAL_STATE.put_rma_atomicity) {
       MPI_Accumulate(src, src_count, src_type, grp_proc,
                      (MPI_Aint) disp, dst_count, dst_type, MPI_REPLACE, mreg->window);
   } else {
@@ -556,7 +557,7 @@ int gmr_get_typed(gmr_t *mreg, void *src, int src_count, MPI_Datatype src_type,
   ARMCII_Assert_msg(disp >= 0 && disp < mreg->slices[proc].size, "Invalid remote address");
   ARMCII_Assert_msg(disp + src_count*extent <= mreg->slices[proc].size, "Transfer is out of range");
 
-  if (ARMCII_GLOBAL_STATE.rma_atomicity) {
+  if (ARMCII_GLOBAL_STATE.get_rma_atomicity) {
       MPI_Get_accumulate(NULL, 0, MPI_BYTE, dst, dst_count, dst_type, grp_proc,
                          (MPI_Aint) disp, src_count, src_type, MPI_NO_OP, mreg->window);
   } else {

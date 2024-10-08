@@ -267,6 +267,7 @@ int PARMCI_NbAccS(int datatype, void *scale,
     gmr_t *mreg, *gmr_loc = NULL;
     MPI_Datatype src_type, dst_type, mpi_datatype;
     int          scaled, mpi_datatype_size;
+    MPI_Info info;
 
     ARMCII_Acc_type_translate(datatype, &mpi_datatype, &mpi_datatype_size);
     scaled = ARMCII_Buf_acc_is_scaled(datatype, scale);
@@ -343,7 +344,14 @@ int PARMCI_NbAccS(int datatype, void *scale,
 
     mreg = gmr_lookup(dst_ptr, proc);
     ARMCII_Assert_msg(mreg != NULL, "Invalid shared pointer");
-
+  
+    /* Temporary Hack - Set accumulate offload */
+    // MPI_Win_get_info(mreg->window, &info);
+    MPI_Info_create(&info);
+    MPI_Info_set(info, "accumulate_offload", "true");
+    MPI_Win_set_info(mreg->window, info);
+    MPI_Info_free(&info);
+    // fprintf(stderr, "%s\n", __func__);
     gmr_accumulate_typed(mreg, src_buf, 1, src_type, dst_ptr, 1, dst_type, proc);
 
     MPI_Type_free(&src_type);
